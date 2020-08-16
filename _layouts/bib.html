@@ -16,18 +16,18 @@
     {% if entry.type == "thesis" %}
       {{reference}}
     {% else %}
-      <span class="title">{{entry.title}}</span>
+      <span class="title"><a href="https://doi.org/{{ entry.doi }}" target="_blank">{{ entry.title }}</a></span>
       <span class="author">
         {% for author in entry.author_array %}
           {% if forloop.length == 1 %}
-            {% if author.last == site.scholar.last_name %}
+            {% if author.last == site.scholar.last_name and author.first == site.scholar.first_name %}
               <em>{{author.last}}, {{author.first}}</em>
             {% else %}
               {{author.last}}, {{author.first}}
             {% endif %}
           {% else %}
             {% unless forloop.last %}
-              {% if author.last == site.scholar.last_name %}
+              {% if author.last == site.scholar.last_name and author.first == site.scholar.first_name %}
                 <em>{{author.last}}, {{author.first}}</em>,
               {% else %}
                 {% if site.data.coauthors[author.last] %}
@@ -37,7 +37,7 @@
                 {% endif %}
               {% endif %}
             {% else %}
-              {% if author.last == site.scholar.last_name %}
+              {% if author.last == site.scholar.last_name and author.first == site.scholar.first_name %}
                 and <em>{{author.last}}, {{author.first}}</em>
               {% else %}
                 {% if site.data.coauthors[author.last] %}
@@ -49,17 +49,15 @@
             {% endunless %}
           {% endif %}
         {% endfor %}
+        {% if entry.type == "article" %}
+        <i>{{entry.journal}}</i> <b>{{entry.volume}}</b>: {{entry.pages}}
+        {% elsif entry.type == "inproceedings" %}
+          <em>In {{entry.booktitle}}</em>
+        {% endif %}
       </span>
 
       <span class="periodical">
-      {% if entry.type == "article" %}
-        <em>{{entry.journal}}</em>
-      {% elsif entry.type == "inproceedings" %}
-        <em>In {{entry.booktitle}}</em>
-      {% endif %}
-      {% if entry.year %}
-        {{entry.year}}
-      {% endif %}
+
       </span>
     {% endif %}
 
